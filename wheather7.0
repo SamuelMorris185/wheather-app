@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>🌤 Weather App</h1>
+    <div class="search-box">
+      <input type="text" id="city" placeholder="Enter city name">
+      <button onclick="getWeather()">Search</button>
+    </div>
+    <div id="weather-result"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+// Function to fetch weather
+async function getWeather(city = null) {
+  const cityInput = document.getElementById("city");
+  const apiKey = "YOUR_API_KEY"; // Replace with your OpenWeather API key
+
+  // If no city is passed, take from input
+  if (!city) {
+    city = cityInput.value;
+  }
+
+  if (!city) {
+    document.getElementById("weather-result").innerHTML = "⚠️ Please enter a city name!";
+    return;
+  }
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.cod === "404") {
+      document.getElementById("weather-result").innerHTML = "❌ City not found!";
+      return;
+    }
+
+    // Save last searched city
+    localStorage.setItem("lastCity", city);
+
+    // Update UI
+    document.getElementById("weather-result").innerHTML = `
+      <h2>${data.name}, ${data.sys.country}</h2>
+      <p>🌡 Temperature: ${data.main.temp}°C</p>
+      <p>💧 Humidity: ${data.main.humidity}%</p>
+      <p>🌬 Wind: ${data.wind.speed} m/s</p>
+      <p>☁ Weather: ${data.weather[0].description}</p>
+    `;
+
+    // Change background color based on weather
+    changeBackground(data.weather[0].main.toLowerCase());
+
+  } catch (error) {
+    document.getElementById("weather-result").innerHTML = "⚠️ Error fetching data!";
+  }
+}
+
+// Function to change background color
+function changeBackground(condition) {
+  let body = document.body;
+
+  if (condition.includes("cloud")) {
+    body.style.background = "linear-gradient(to right, #757f9a, #d7dde8)"; // Cloudy
+  } else if (condition.includes("rain")) {
+    body.style.background = "linear-gradient(to right, #373b44, #4286f4)"; // Rainy
+  } else if (condition.includes("clear")) {
+    body.style.background = "linear-gradient(to right, #f7971e, #ffd200)"; // Sunny
+  } else if (condition.includes("snow")) {
+    body.style.background = "linear-gradient(to right, #83a4d4, #b6fbff)"; // Snow
+  } else {
+    body.style.background = "linear-gradient(to right, #4facfe, #00f2fe)"; // Default
+  }
+}
+
+// Load last searched city on startup
+window.onload = () => {
+  let lastCity = localStorage.getItem("lastCity");
+  if (lastCity) {
+    document.getElementById("city").value = lastCity;
+    getWeather(lastCity);
+  }
+};
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  transition: background 0.5s ease-in-out;
+}
+
+.app {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 320px;
+  transition: 0.3s;
+}
+
+.app:hover {
+  transform: scale(1.03);
+}
+
+.search-box {
+  margin-bottom: 15px;
+}
+
+input {
+  padding: 10px;
+  width: 70%;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background: #4facfe;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #3a86ff;
+}
