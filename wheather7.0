@@ -18,6 +18,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 // Function to fetch weather
 async function getWeather(city = null) {
   const cityInput = document.getElementById("city");
