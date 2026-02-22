@@ -137,4 +137,3 @@ button {
 button:hover {
   background: #3a86ff; 
 }
-.env
