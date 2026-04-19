@@ -148,7 +148,7 @@ hss.c
 transition:0.5s:
 hss.cl
 hs.doc
-button:hover{
+button:hover{.)(787
  background:0024;
 }
 hss.cas
