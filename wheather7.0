@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+,<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -145,7 +145,7 @@ html.css
 doc.
 html.
 hss.c
-transition:0.5s:
+transition:0.5
 hss.cl
 hs.doc
 button:hover{.)(787
